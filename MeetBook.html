@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeetBook - آپ کا سوشل نیٹ ورک</title>
+    <style>
+        :root {
+            --primary: #1877f2;
+            --secondary: #42b72a;
+            --danger: #f02849;
+            --warning: #f7b928;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-primary: #1c1e21;
+            --text-secondary: #65676b;
+            --border: #dddfe2;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #18191a;
+            --card-bg: #242526;
+            --text-primary: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --border: #3e4042;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* ہیڈر */
+        .main-header {
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: var(--card-bg);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1001;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-color);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* مین کونٹینٹ */
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 350px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* سائیڈبار */
+        .sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg-color);
+        }
+
+        .sidebar-item.active {
+            background: rgba(24, 119, 242, 0.1);
+            border-right: 3px solid var(--primary);
+        }
+
+        /* مرکزی فیڈ */
+        .main-feed {
+            min-height: 100vh;
+        }
+
+        .feed-section {
+            background: var(--card-bg);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+
+        /* دائیں سائیڈبار */
+        .right-sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        /* عمومی اسٹائلز */
+        .section-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+
+        .section-content {
+            padding: 16px;
+        }
+
+        .action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #166fe5;
+        }
+
+        .action-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .secondary-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .danger-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .fb-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+        }
+
+        /* واپسی سیکشن */
+        .withdrawal-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .wallet-address {
+            background: var(--bg-color);
+            padding: 12px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .wallet-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .withdrawal-status {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .success-badge {
+            background: var(--secondary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .warning-badge {
+            background: var(--warning);
+            color: black;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* پروفائل */
+        .profile-header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* دوستوں کی فہرست */
+        .friends-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--bg-color);
+            cursor: pointer;
+        }
+
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .friend-name {
+            font-weight: 500;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        /* فعال سیکشن */
+        .active-section {
+            display: block;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        /* رسپانسیو ڈیزائن */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 250px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .sidebar, .right-sidebar {
+                position: static;
+            }
+            
+            .search-container {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                flex-wrap: wrap;
+            }
+            
+            .search-container {
+                order: 3;
+                margin: 10px 0 0;
+                max-width: 100%;
+            }
+            
+            .friends-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- مین ہیڈر -->
+    <header class="main-header">
+        <div class="logo" onclick="showSection('home')">MeetBook</div>
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="MeetBook پر تلاش کریں..." onfocus="showSearchResults()">
+            <div class="search-results" id="searchResults">
+                <!-- سرچ رزلٹس ڈائنامکلی شامل ہوں گے -->
+            </div>
+        </div>
+        <div class="nav-icons">
+            <div class="nav-icon" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </div>
+            <div class="nav-icon" id="notificationsIcon">
+                <i class="fas fa-bell"></i>
+                <div class="notification-badge">3</div>
+            </div>
+            <div class="nav-icon" id="userMenu" onclick="showSection('profile')">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- مین کونٹینٹ -->
+    <div class="main-container">
+        <!-- بائیں سائیڈبار -->
+        <div class="sidebar">
+            <!-- نیویگیشن مینیو -->
+            <div class="sidebar-section fb-card">
+                <div class="sidebar-item active" onclick="showSection('home')">
+                    <i class="fas fa-home"></i>
+                    <span>ہوم پیج</span>
+                </div>
+                <div class="sidebar-item" onclick="showSection('idVerification')">
+                    <i class="fas fa-id-card"></i>
+                    <span>ID تصدیق</span>
+                </div>
+                <div class="sidebar-item" onclick="showSection('analytics')">
+                    <i class="fas fa-analytics"></i>
+                    <span>اینالٹکس</span>
+                </div>
+                <div class="sidebar-item" onclick="showSection('security')">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>سیکورٹی</span>
+                </div>
+                <div class="sidebar-item" onclick="showSection('notifications')">
+                    <i class="fas fa-bell"></i>
+                    <span>نوٹیفیکیشنز</span>
+                </div>
+                <div class="sidebar-item" onclick="showSection('friends')">
+                    <i class="fas fa-user-friends"></i>
+                    <span>دوست (100/100)</span>
+                </div>
+                <div class="sidebar-item" onclick="showSection('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>ترتیبات</span>
+                </div>
+            </div>
+
+            <!-- ارننگ سمری - اب واپسی سسٹم کے ساتھ -->
+            <div class="sidebar-section fb-card">
+                <div class="section-header">میری کمائی</div>
+                <div class="section-content">
+                    <!-- بنیادی ارننگ انفارمیشن -->
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <div style="font-size: 24px; font-weight: bold; color: var(--primary);">$24.50</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">اس مہینے کی کمائی</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <div style="text-align: center;">
+                            <div style="font-weight: bold;">1,250</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">پوائنٹس</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-weight: bold;">45</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">پوسٹس</div>
+                        </div>
+                    </div>
+
+                    <!-- واپسی کا سسٹم -->
+                    <div class="withdrawal-section">
+                        <h4 style="margin-bottom: 15px; color: var(--text-primary);">واپسی کا نظام</h4>
+                        
+                        <!-- BEP20 والٹ ایڈریس -->
+                        <div id="walletSection">
+                            <div style="font-size: 14px; margin-bottom: 8px; color: var(--text-secondary);">
+                                BEP20 والٹ ایڈریس:
+                            </div>
+                            <div id="walletDisplay" class="wallet-address" style="display: none;">
+                                <!-- والٹ ایڈریس یہاں ظاہر ہوگا -->
+                            </div>
+                            <div id="walletInputSection">
+                                <input type="text" 
+                                       id="walletAddress" 
+                                       class="wallet-input" 
+                                       placeholder="اپنا BEP20 والٹ ایڈریس درج کریں (0x...)"
+                                       maxlength="42">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">
+                                    ⚠️ یہ ایڈریس صرف ایک بار شامل کیا جا سکتا ہے اور تبدیل نہیں ہو سکتا
+                                </div>
+                                <button class="action-btn" id="saveWalletBtn" style="width: 100%;">
+                                    والٹ ایڈریس محفوظ کریں
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- واپسی کی تفصیلات -->
+                        <div style="margin-top: 20px;">
+                            <div class="withdrawal-status">
+                                <span>کل جمع شدہ رقم:</span>
+                                <span style="font-weight: bold; color: var(--primary);">$85.50</span>
+                            </div>
+                            <div class="withdrawal-status">
+                                <span>واپسی کی کم از کم حد:</span>
+                                <span style="font-weight: bold; color: var(--secondary);">$100</span>
+                            </div>
+                            
+                            <!-- پروگریس بار -->
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="withdrawalProgress" style="width: 85.5%;"></div>
+                            </div>
+                            
+                            <div class="withdrawal-status">
+                                <span>اب تک جمع:</span>
+                                <span>$85.50 / $100</span>
+                            </div>
+
+                            <!-- واپسی کا بٹن -->
+                            <button class="action-btn" id="withdrawBtn" style="width: 100%; margin-top: 15px;" disabled>
+                                واپسی کی درخواست کریں
+                            </button>
+                            
+                            <!-- واپسی کی حیثیت -->
+                            <div id="withdrawalStatus" style="margin-top: 10px; text-align: center; font-size: 12px;">
+                                <span class="warning-badge">$100 مکمل ہونے کا انتظار ہے</span>
+                            </div>
+                        </div>
+
+                        <!-- واپسی کی تاریخ -->
+                        <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border);">
+                            <div style="font-size: 14px; margin-bottom: 10px; color: var(--text-secondary);">
+                                آخری واپسی:
+                            </div>
+                            <div id="withdrawalHistory" style="font-size: 12px; color: var(--text-secondary);">
+                                ابھی تک کوئی واپسی نہیں ہوئی
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- مرکزی فیڈ - ہوم سیکشن -->
+        <div class="main-feed active-section" id="homeSection">
+            <!-- ID تصدیق سیکشن -->
+            <div class="feed-section fb-card">
+                <div class="section-header">ID تصدیق سسٹم</div>
+                <div class="section-content">
+                    <div style="background: linear-gradient(135deg, #1877f2, #42b72a); color: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                        <h3 style="margin-bottom: 10px;">اپنی ID تصدیق کروائیں</h3>
+                        <p style="margin-bottom: 15px; opacity: 0.9;">تصدیق شدہ صارفین ہی پوسٹس اور آرٹیکلز سے کمائی کر سکتے ہیں</p>
+                        <button class="action-btn" style="background: white; color: #1877f2;">تصدیق شروع کریں</button>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                        <div style="text-align: center; padding: 15px; background: var(--bg-color); border-radius: 8px;">
+                            <div style="font-size: 24px; margin-bottom: 5px;">1</div>
+                            <div style="font-size: 12px;">فون نمبر تصدیق</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: var(--bg-color); border-radius: 8px;">
+                            <div style="font-size: 24px; margin-bottom: 5px;">2</div>
+                            <div style="font-size: 12px;">ذاتی معلومات</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: var(--bg-color); border-radius: 8px;">
+                            <div style="font-size: 24px; margin-bottom: 5px;">3</div>
+                            <div style="font-size: 12px;">ID کارڈ اپلوڈ</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: var(--bg-color); border-radius: 8px;">
+                            <div style="font-size: 24px; margin-bottom: 5px;">4</div>
+                            <div style="font-size: 12px;">لائیو تصدیق</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- پوسٹ فیڈ -->
+            <div class="feed-section fb-card">
+                <div class="section-content">
+                    <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">ا</div>
+                        <input type="text" placeholder="آپ کیا سوچ رہے ہیں؟" style="flex: 1; padding: 12px 15px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-color);">
+                    </div>
+                    <div style="display: flex; justify-content: space-around; border-top: 1px solid var(--border); padding-top: 10px;">
+                        <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-image" style="color: #45bd62;"></i>
+                            <span>تصویر</span>
+                        </button>
+                        <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-video" style="color: #f02849;"></i>
+                            <span>ویڈیو</span>
+                        </button>
+                        <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-file-alt" style="color: #f7b928;"></i>
+                            <span>آرٹیکل</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- نمونہ پوسٹس -->
+            <div class="feed-section fb-card">
+                <div class="section-content">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">ف</div>
+                        <div>
+                            <div style="font-weight: bold;">فاطمہ علی <i class="fas fa-check-circle" style="color: var(--primary); font-size: 14px;"></i></div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">2 گھنٹے پہلے · <i class="fas fa-globe-asia"></i></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <p>مصنوعی ذہانت نے گزشتہ دہائی میں حیرت انگیز ترقی کی ہے۔ یہ ٹیکنالوجی اب صرف سائنس فکشن کی کہانیوں تک محدود نہیں رہی بلکہ ہماری روزمرہ زندگی کا اہم حصہ بن چکی ہے۔</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">
+                        <div>125 لائکس · 24 تبصرے · 8 شیئرز</div>
+                        <div style="color: var(--secondary); font-weight: bold;">+25 پوائنٹس</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-around; border-top: 1px solid var(--border); padding-top: 8px;">
+                        <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>لائک</span>
+                        </button>
+                        <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-comment"></i>
+                            <span>تبصرہ</span>
+                        </button>
+                        <button style="background: none; border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                            <i class="far fa-share-square"></i>
+                            <span>شیئر</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- دائیں سائیڈبار -->
+        <div class="right-sidebar">
+            <!-- ریل ٹائم اینالٹکس -->
+            <div class="sidebar-section fb-card">
+                <div class="section-header">ریل ٹائم انسائٹس</div>
+                <div class="section-content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <div style="text-align: center; padding: 12px; background: var(--bg-color); border-radius: 6px;">
+                            <div style="font-size: 18px; font-weight: bold; color: var(--primary);" id="liveViewers">24</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">لائیو ویوز</div>
+                        </div>
+                        <div style="text-align: center; padding: 12px; background: var(--bg-color); border-radius: 6px;">
+                            <div style="font-size: 18px; font-weight: bold; color: var(--primary);" id="engagementRate">4.2%</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">انگیجمنٹ</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">حالیہ سرگرمیاں:</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <i class="fas fa-heart" style="color: var(--danger);"></i>
+                            <span>احمد نے آپ کی پوسٹ کو لائک کیا</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <i class="fas fa-share" style="color: var(--secondary);"></i>
+                            <span>پوسٹ شیئر ہوئی 3 بار</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                            <i class="fas fa-user-plus" style="color: var(--primary);"></i>
+                            <span>2 نئے فالوورز</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- سیکورٹی سٹیٹس -->
+            <div class="sidebar-section fb-card">
+                <div class="section-header">سیکورٹی کی سطح</div>
+                <div class="section-content">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                        <div style="display: flex; gap: 2px;">
+                            <div style="width: 20px; height: 4px; background: var(--secondary); border-radius: 2px;"></div>
+                            <div style="width: 20px; height: 4px; background: var(--secondary); border-radius: 2px;"></div>
+                            <div style="width: 20px; height: 4px; background: var(--secondary); border-radius: 2px;"></div>
+                            <div style="width: 20px; height: 4px; background: var(--border); border-radius: 2px;"></div>
+                            <div style="width: 20px; height: 4px; background: var(--border); border-radius: 2px;"></div>
+                        </div>
+                        <span style="font-size: 12px; color: var(--secondary);">اعلیٰ سیکورٹی</span>
+                    </div>
+                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 10px;">
+                        آپ کی سیکورٹی کی سطح اعلیٰ ہے۔ مزید بہتری کے لیے تجاویز:
+                    </div>
+                    <button class="action-btn" style="width: 100%;">سیکورٹی چیک کریں</button>
+                </div>
+            </div>
+
+            <!-- ڈسپلے سیٹنگز -->
+            <div class="sidebar-section fb-card">
+                <div class="section-header">ڈسپلے ترتیبات</div>
+                <div class="section-content">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 14px;">ڈارک موڈ</span>
+                        <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                            <input type="checkbox" id="darkModeToggle" style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #ccc; transition: .4s; border-radius: 24px;"></span>
+                            <span style="position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background: white; transition: .4s; border-radius: 50%;"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-size: 14px;">پش نوٹیفیکیشنز</span>
+                        <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                            <input type="checkbox" id="pushNotificationsToggle" checked style="opacity: 0; width: 0; height: 0;">
+                            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--primary); transition: .4s; border-radius: 24px;"></span>
+                            <span style="position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background: white; transition: .4s; border-radius: 50%; transform: translateX(20px);"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- پش نوٹیفیکیشن -->
+    <div id="pushNotification" style="position: fixed; top: 20px; left: 20px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; z-index: 10000; max-width: 300px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong>MeetBook</strong>
+            <button onclick="hidePushNotification()" style="background: none; border: none; font-size: 16px; cursor: pointer; color: var(--text-secondary);">×</button>
+        </div>
+        <div id="pushContent" style="font-size: 14px;">آپ کے پاس نئی سرگرمی ہے!</div>
+    </div>
+
+    <script>
+        // واپسی سسٹم کے لیے ڈیٹا
+        const userWalletData = {
+            bep20Address: null,
+            totalEarnings: 85.50,
+            currentBalance: 24.50,
+            points: 1250,
+            withdrawalLimit: 100,
+            withdrawalHistory: []
+        };
+
+        // DOM elements
+        const walletAddressInput = document.getElementById('walletAddress');
+        const saveWalletBtn = document.getElementById('saveWalletBtn');
+        const walletDisplay = document.getElementById('walletDisplay');
+        const walletInputSection = document.getElementById('walletInputSection');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const withdrawalProgress = document.getElementById('withdrawalProgress');
+        const withdrawalStatus = document.getElementById('withdrawalStatus');
+        const withdrawalHistory = document.getElementById('withdrawalHistory');
+
+        // والٹ ایڈریس محفوظ کریں
+        saveWalletBtn.addEventListener('click', function() {
+            const address = walletAddressInput.value.trim();
+            
+            if (!address) {
+                showPushNotification('براہ کرم والٹ ایڈریس درج کریں');
+                return;
+            }
+            
+            if (!isValidBEP20Address(address)) {
+                showPushNotification('براہ کرم درست BEP20 ایڈریس درج کریں');
+                return;
+            }
+            
+            // والٹ ایڈریس محفوظ کریں
+            userWalletData.bep20Address = address;
+            localStorage.setItem('userWallet', JSON.stringify(userWalletData));
+            
+            // UI اپڈیٹ کریں
+            walletDisplay.textContent = address;
+            walletDisplay.style.display = 'block';
+            walletInputSection.style.display = 'none';
+            
+            showPushNotification('والٹ ایڈریس کامیابی سے محفوظ ہو گیا!');
+            updateWithdrawalUI();
+        });
+
+        // BEP20 ایڈریس کی تصدیق
+        function isValidBEP20Address(address) {
+            return /^0x[a-fA-F0-9]{40}$/.test(address);
+        }
+
+        // واپسی کی UI اپڈیٹ
+        function updateWithdrawalUI() {
+            const progress = (userWalletData.totalEarnings / userWalletData.withdrawalLimit) * 100;
+            withdrawalProgress.style.width = Math.min(progress, 100) + '%';
+            
+            // واپسی کا بٹن اپڈیٹ کریں
+            if (userWalletData.bep20Address && userWalletData.totalEarnings >= userWalletData.withdrawalLimit) {
+                withdrawBtn.disabled = false;
+                withdrawalStatus.innerHTML = '<span class="success-badge">واپسی کے لیے تیار ہے!</span>';
+            } else if (!userWalletData.bep20Address) {
+                withdrawBtn.disabled = true;
+                withdrawalStatus.innerHTML = '<span class="warning-badge">پہلے والٹ ایڈریس شامل کریں</span>';
+            } else {
+                withdrawBtn.disabled = true;
+                const remaining = userWalletData.withdrawalLimit - userWalletData.totalEarnings;
+                withdrawalStatus.innerHTML = `<span class="warning-badge">$${remaining.toFixed(2)} مزید درکار ہیں</span>`;
+            }
+            
+            // واپسی کی تاریخ اپڈیٹ کریں
+            if (userWalletData.withdrawalHistory.length > 0) {
+                const lastWithdrawal = userWalletData.withdrawalHistory[userWalletData.withdrawalHistory.length - 1];
+                withdrawalHistory.innerHTML = `
+                    $${lastWithdrawal.amount} - ${lastWithdrawal.date}<br>
+                    <span style="color: var(--secondary);">${lastWithdrawal.status}</span>
+                `;
+            }
+        }
+
+        // واپسی کی درخواست
+        withdrawBtn.addEventListener('click', function() {
+            if (!userWalletData.bep20Address) {
+                showPushNotification('پہلے والٹ ایڈریس شامل کریں');
+                return;
+            }
+            
+            if (userWalletData.totalEarnings < userWalletData.withdrawalLimit) {
+                showPushNotification(`واپسی کے لیے کم از کم $${userWalletData.withdrawalLimit} درکار ہیں`);
+                return;
+            }
+            
+            // واپسی کی درخواست جمع کروائیں
+            const withdrawalRequest = {
+                amount: userWalletData.totalEarnings,
+                date: new Date().toLocaleDateString('ur-PK'),
+                status: 'زیر التواء',
+                address: userWalletData.bep20Address
+            };
+            
+            userWalletData.withdrawalHistory.push(withdrawalRequest);
+            userWalletData.totalEarnings = 0;
+            userWalletData.currentBalance = 0;
+            
+            // ڈیٹا محفوظ کریں
+            localStorage.setItem('userWallet', JSON.stringify(userWalletData));
+            
+            // UI اپڈیٹ کریں
+            updateWithdrawalUI();
+            showPushNotification(`واپسی کی درخواست جمع ہو گئی! $${withdrawalRequest.amount}`);
+        });
+
+        // پرانا کوڈ (سیکشن مینجمنٹ، سرچ، تھیم، وغیرہ)
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.main-feed');
+            sections.forEach(section => {
+                section.classList.add('hidden-section');
+                section.classList.remove('active-section');
+            });
+            
+            const targetSection = document.getElementById(sectionId + 'Section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden-section');
+                targetSection.classList.add('active-section');
+            }
+            
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const activeItem = document.querySelector(`.sidebar-item[onclick="showSection('${sectionId}')"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+            
+            if (sectionId !== 'home') {
+                showPushNotification(`آپ نے ${getSectionName(sectionId)} سیکشن کھولا ہے`);
+            }
+        }
+        
+        function getSectionName(sectionId) {
+            const sectionNames = {
+                'home': 'ہوم',
+                'idVerification': 'ID تصدیق',
+                'analytics': 'اینالٹکس',
+                'security': 'سیکورٹی',
+                'notifications': 'نوٹیفیکیشنز',
+                'friends': 'دوست',
+                'profile': 'پروفائل',
+                'settings': 'ترتیبات'
+            };
+            return sectionNames[sectionId] || sectionId;
+        }
+        
+        function showSearchResults() {
+            const searchBox = document.getElementById('searchBox');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (searchBox.value.trim() === '') {
+                searchResults.innerHTML = `
+                    <div class="search-result-item" onclick="searchUser('احمد رضا')">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">ا</div>
+                        <div>
+                            <div style="font-weight: bold;">احمد رضا</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">2 مشترکہ دوست</div>
+                        </div>
+                    </div>
+                    <div class="search-result-item" onclick="searchUser('فاطمہ علی')">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--secondary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">ف</div>
+                        <div>
+                            <div style="font-weight: bold;">فاطمہ علی</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">ٹیکنالوجی گروپ</div>
+                        </div>
+                    </div>
+                    <div class="search-result-item" onclick="searchUser('سافٹ ویئر ڈویلپرز')">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--warning); display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">سافٹ ویئر ڈویلپرز</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">گروپ · 245 اراکین</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                searchResults.innerHTML = `
+                    <div class="search-result-item" onclick="searchUser('${searchBox.value}')">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold;">"${searchBox.value}" کے نتائج</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">MeetBook پر تلاش کریں</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            searchResults.style.display = 'block';
+        }
+        
+        function searchUser(query) {
+            showPushNotification(`"${query}" کی تلاش کے نتائج دکھائے جا رہے ہیں`);
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('searchBox').value = query;
+        }
+        
+        document.addEventListener('click', function(event) {
+            const searchContainer = document.querySelector('.search-container');
+            if (!searchContainer.contains(event.target)) {
+                document.getElementById('searchResults').style.display = 'none';
+            }
+        });
+
+        // تھیم ٹوگل
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('darkModeToggle').checked = newTheme === 'dark';
+        });
+
+        // ڈارک موڈ ٹوگل
+        document.getElementById('darkModeToggle').addEventListener('change', function() {
+            const newTheme = this.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // پش نوٹیفیکیشنز
+        function showPushNotification(message) {
+            const pushNotification = document.getElementById('pushNotification');
+            const pushContent = document.getElementById('pushContent');
+            
+            pushContent.textContent = message;
+            pushNotification.style.display = 'block';
+            
+            setTimeout(hidePushNotification, 5000);
+        }
+
+        function hidePushNotification() {
+            document.getElementById('pushNotification').style.display = 'none';
+        }
+
+        // ریل ٹائم ڈیٹا اپ ڈیٹ
+        function updateRealtimeData() {
+            const liveViewers = document.getElementById('liveViewers');
+            const engagementRate = document.getElementById('engagementRate');
+            
+            const randomViewers = Math.floor(Math.random() * 20) + 15;
+            const randomEngagement = (Math.random() * 2 + 3).toFixed(1);
+            
+            liveViewers.textContent = randomViewers;
+            engagementRate.textContent = randomEngagement + '%';
+        }
+
+        // نوٹیفیکیشن آئیکن
+        document.getElementById('notificationsIcon').addEventListener('click', function() {
+            showSection('notifications');
+            showPushNotification('آپ کے پاس 3 نئی نوٹیفیکیشنز ہیں!');
+        });
+
+        // سیوڈ سیٹنگز لوڈ کریں
+        function loadSavedSettings() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('darkModeToggle').checked = savedTheme === 'dark';
+            
+            // والٹ ڈیٹا لوڈ کریں
+            const savedWallet = localStorage.getItem('userWallet');
+            if (savedWallet) {
+                const walletData = JSON.parse(savedWallet);
+                Object.assign(userWalletData, walletData);
+                
+                if (userWalletData.bep20Address) {
+                    walletDisplay.textContent = userWalletData.bep20Address;
+                    walletDisplay.style.display = 'block';
+                    walletInputSection.style.display = 'none';
+                }
+            }
+            
+            updateWithdrawalUI();
+        }
+
+        // ابتدائی سیٹ اپ
+        loadSavedSettings();
+        setInterval(updateRealtimeData, 5000);
+        updateRealtimeData();
+
+        // پش نوٹیفیکیشنز کا ٹیسٹ
+        setTimeout(() => {
+            if (document.getElementById('pushNotificationsToggle').checked) {
+                showPushNotification('خوش آمدید! آپ کا MeetBook اکاؤنٹ تیار ہے۔');
+            }
+        }, 2000);
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html>
